@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Arweave Content Viewer</title>
   <style>
-    /* iframe 的样式 */
+    /* Style for the iframe */
     #arweaveContent {
       width: 100%;
-      height: 100vh; /* 全屏显示 */
-      border: none; /* 移除边框 */
+      height: 100vh; /* Full screen display */
+      border: none; /* Remove border */
     }
   </style>
 </head>
@@ -20,31 +20,31 @@
 </div>
 
 <script>
-  // 从URL中提取hash
+  // Function to extract the hash from the URL
   function getHashFromURL() {
     const path = window.location.pathname;
-    return path.split("/")[1]; // 假设格式为 /arhash
+    return path.split("/")[1]; // Assumes the format is /arhash
   }
 
-  // 动态加载iframe
+  // Dynamically load the iframe
   function loadArweaveContent(hash) {
-    // 检查hash是否存在
+    // Check if hash exists
     if (hash) {
-      // 创建iframe元素
+      // Create the iframe element
       const iframe = document.createElement("iframe");
       iframe.id = "arweaveContent";
-      iframe.src = `https://arweave.4everland.xyz/${hash}`; // 组合成正确的网关URL
+      iframe.src = `https://arweave.4everland.xyz/${hash}`; // Construct the correct gateway URL
       
-      // 清空内容容器并插入iframe
+      // Clear content container and insert the iframe
       const contentDiv = document.getElementById("content");
-      contentDiv.innerHTML = ""; // 清空加载提示
+      contentDiv.innerHTML = ""; // Clear loading message
       contentDiv.appendChild(iframe);
     } else {
       document.getElementById("content").textContent = "No content hash provided in URL.";
     }
   }
 
-  // 获取hash并加载内容
+  // Get the hash and load the content
   const arHash = getHashFromURL();
   loadArweaveContent(arHash);
 </script>
