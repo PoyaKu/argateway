@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arweave Content Loader</title>
+</head>
+<body>
+  <div id="content">
+    <p>Loading content...</p>
+  </div>
+
+  <script>
+    // 从URL获取hash
+    function getHashFromURL() {
+      // 例如：从 www.abc.com/arhash 中提取 arhash 部分
+      const path = window.location.pathname;
+      return path.split("/")[1]; // 获取路径中的arhash部分
+    }
+
+    // 通过Arweave网关获取内容
+    async function loadArweaveContent(hash) {
+      try {
+        const response = await fetch(`https://arweave.4everland.xyz/${hash}`);
+        
+        if (!response.ok) {
+          throw new Error("Content not found.");
+        }
+        
+        const contentType = response.headers.get("Content-Type");
+        
+        // 根据内容类型决定如何显示内容
+        if (contentType && contentType.includes("text/html")) {
+          const htmlContent = await response.text();
+          document.getElementById("content").innerHTML = htmlContent;
+        } else if (contentType && contentType.includes("application/json")) {
+          const jsonContent = await response.json();
+          document.getElementById("content").textContent = JSON.stringify(jsonContent, null, 2);
+        } else {
+          const textContent = await response.text();
+          document.getElementById("content").textContent = textContent;
+        }
+      } catch (error) {
+        document.getElementById("content").textContent = `Error loading content: ${error.message}`;
+      }
+    }
+
+    // 执行加载过程
+    const arHash = getHashFromURL();
+    if (arHash) {
+      loadArweaveContent(arHash);
+    } else {
+      document.getElementById("content").textContent = "No content hash provided in URL.";
+    }
+  </script>
+</body>
+</html>
